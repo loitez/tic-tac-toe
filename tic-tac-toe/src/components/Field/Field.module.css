@@ -1,0 +1,26 @@
+.fieldWrapper {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+    padding: 0;
+    margin: 0;
+}
+.fieldCell {
+    box-sizing: border-box;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 48px;
+    background: #6a6a6a;
+    color: #c21da4;
+    text-shadow: 0 0 7px #c21da4;
+    cursor: pointer;
+    border-radius: 10px;
+    box-shadow: 0 0 9px 1px #1c1c1c;
+}
+.fieldCell:hover {
+    background: #959494;
+}

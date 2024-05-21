@@ -1,0 +1,25 @@
+.gameWrapper {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+    justify-items: center;
+    margin: 15px 0;
+}
+.startOverButton {
+    outline: none;
+    border: 1px solid #c21da4;
+    background-color: #fff;
+    border-radius: 20px;
+    width: 50%;
+    height: 40px;
+    text-shadow: 0 0 7px #c21da4;
+    box-shadow: 0 0 9px 0 #c21da4;
+    color: #c21da4;
+    font-family: inherit;
+    font-size: inherit;
+    margin-bottom: 15px;
+}
+.startOverButton:hover {
+    box-shadow: 0 0 13px 1px #c21da4;
+    cursor: pointer;
+}

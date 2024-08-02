@@ -1,6 +1,7 @@
 import styles from './Field.module.css'
-import PropTypes from "prop-types";
-import { store } from '../../store'
+import {useSelector, useDispatch} from "react-redux";
+import {selectCurrentPlayer, selectIsGameOver, selectField} from "../../selectors";
+import { setCell, setNextPlayer, SET_DRAW, SET_GAME_OVER } from '../../actions';
 
 const WIN_PATTERNS = [
     [0, 1, 2], [3, 4, 5], [6, 7, 8], // Варианты побед по горизонтали
@@ -9,52 +10,37 @@ const WIN_PATTERNS = [
 ];
 
 export const FieldLayout = () => {
-
-    const stateRed = store.getState()
-    console.log(stateRed)
-    const {field, currentPlayer, isGameEnded, isDraw} = stateRed;
+    const currentPlayer = useSelector(selectCurrentPlayer);
+    const isGameOver = useSelector(selectIsGameOver);
+    const field = useSelector(selectField);
+    const dispatch = useDispatch();
 
     function setCellContent(item, idx) {
         let updatedField = Array.from(field)
 
         if (item.length) {
             return
-        } else if (!isGameEnded) {
-            console.log('dispatching')
-            store.dispatch({type: 'SET_CELL_CONTENT', payload: {
-                ...stateRed,
-                currentPlayer: currentPlayer,
-                id: idx
-            }})
-
+        } else if (!isGameOver) {
+            dispatch(setCell(idx, currentPlayer))
             updatedField[idx] = currentPlayer
 
         }
 
-
         let winCheck = WIN_PATTERNS.some((pattern) => {
             return [...pattern].every((item) => updatedField[item] === currentPlayer)
         })
+
         let isFieldFilled = !updatedField.some((item) => item === '')
+
         if (winCheck) {
-            store.dispatch({type: 'SET_GAME_END', payload: {
-                    ...stateRed,
-                    isGameEnded: true
-                }})
+            dispatch(SET_GAME_OVER)
         } else if (isFieldFilled) {
-            store.dispatch({type: 'SET_DRAW', payload: {
-                    ...stateRed,
-                    isDraw: true
-            }})
-        } else if (!isGameEnded) {
+            dispatch(SET_DRAW)
+        } else if (!isGameOver) {
             let nextPlayer;
             currentPlayer === 'X' ? nextPlayer = '0' : nextPlayer = 'X'
-            store.dispatch({type: 'SET_NEXT_PLAYER', payload: {
-                    ...stateRed,
-                    currentPlayer: nextPlayer
-                }})
+            dispatch(setNextPlayer(nextPlayer))
         }
-
     }
 
     return (

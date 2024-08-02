@@ -1,13 +1,14 @@
 import {FieldContainer} from '../Field/FieldContainer';
 import {InformationContainer} from '../Information/InformationContainer'
 import styles from './Game.module.css'
-import PropTypes from 'prop-types';
-import { store } from '../../store'
+import { useDispatch } from 'react-redux';
+import { RESET_GAME } from "../../actions";
 
 export const GameLayout = () => {
+    const dispatch = useDispatch()
 
     function startOver() {
-        store.dispatch({type: 'START_OVER'})
+        dispatch(RESET_GAME);
     }
     return (
         <div className={styles.gameWrapper}>

@@ -1,23 +1,17 @@
 import styles from './Information.module.css'
-import PropTypes from "prop-types";
-import {store} from "../../store";
-import {useEffect} from "react";
+import {useSelector} from "react-redux";
+import {selectCurrentPlayer, selectIsDraw, selectIsGameOver} from "../../selectors";
 
 export const InformationLayout = () => {
-    const stateRed = store.getState()
-    console.log(stateRed)
-    const {field, currentPlayer, isGameEnded, isDraw} = stateRed;
-    useEffect(() => {
-        console.log(stateRed, 'useff')
-    }, [currentPlayer])
-
-
+    const currentPlayer = useSelector(selectCurrentPlayer);
+    const isDraw = useSelector(selectIsDraw);
+    const isGameOver = useSelector(selectIsGameOver);
 
     return (
         <div className={styles.information}>
             { isDraw === true && 'Ничья' }
-            { isDraw === false && isGameEnded === true && `Победа: ${currentPlayer}`}
-            { isDraw === false && isGameEnded === false && `Ходит: ${currentPlayer}`}
+            { isDraw === false && isGameOver === true && `Победа: ${currentPlayer}`}
+            { isDraw === false && isGameOver === false && `Ходит: ${currentPlayer}`}
         </div>
     )
 }

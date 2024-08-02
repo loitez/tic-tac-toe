@@ -1,27 +1,23 @@
 import styles from './Information.module.css'
 import PropTypes from "prop-types";
+import {store} from "../../store";
+import {useEffect} from "react";
 
-export const InformationLayout = (props) => {
+export const InformationLayout = () => {
+    const stateRed = store.getState()
+    console.log(stateRed)
+    const {field, currentPlayer, isGameEnded, isDraw} = stateRed;
+    useEffect(() => {
+        console.log(stateRed, 'useff')
+    }, [currentPlayer])
+
+
+
     return (
         <div className={styles.information}>
-            {
-                props.isDraw === true && 'Ничья'
-            }
-            {
-                props.isDraw === false && props.isGameEnded === true && `Победа: ${props.currentPlayer}`
-            }
-            {
-                props.isDraw === false && props.isGameEnded === false && `Ходит: ${props.currentPlayer}`
-            }
+            { isDraw === true && 'Ничья' }
+            { isDraw === false && isGameEnded === true && `Победа: ${currentPlayer}`}
+            { isDraw === false && isGameEnded === false && `Ходит: ${currentPlayer}`}
         </div>
     )
-}
-
-InformationLayout.propTypes = {
-    currentPlayer: PropTypes.string,
-    setCurrentPlayer: PropTypes.func,
-    isGameEnded: PropTypes.bool,
-    setIsGameEnded: PropTypes.func,
-    isDraw: PropTypes.bool,
-    setIsDraw: PropTypes.func
 }

@@ -1,5 +1,6 @@
 import styles from './Field.module.css'
 import PropTypes from "prop-types";
+import { store } from '../../store'
 
 const WIN_PATTERNS = [
     [0, 1, 2], [3, 4, 5], [6, 7, 8], // Варианты побед по горизонтали
@@ -7,7 +8,11 @@ const WIN_PATTERNS = [
     [0, 4, 8], [2, 4, 6] // Варианты побед по диагонали
 ];
 
-export const FieldLayout = ({ field, setField, currentPlayer, setCurrentPlayer, isGameEnded, setIsGameEnded, isDraw, setIsDraw }) => {
+export const FieldLayout = () => {
+
+    const stateRed = store.getState()
+    console.log(stateRed)
+    const {field, currentPlayer, isGameEnded, isDraw} = stateRed;
 
     function setCellContent(item, idx) {
         let updatedField = Array.from(field)
@@ -15,8 +20,15 @@ export const FieldLayout = ({ field, setField, currentPlayer, setCurrentPlayer, 
         if (item.length) {
             return
         } else if (!isGameEnded) {
+            console.log('dispatching')
+            store.dispatch({type: 'SET_CELL_CONTENT', payload: {
+                ...stateRed,
+                currentPlayer: currentPlayer,
+                id: idx
+            }})
+
             updatedField[idx] = currentPlayer
-            setField(updatedField)
+
         }
 
 
@@ -25,11 +37,22 @@ export const FieldLayout = ({ field, setField, currentPlayer, setCurrentPlayer, 
         })
         let isFieldFilled = !updatedField.some((item) => item === '')
         if (winCheck) {
-            setIsGameEnded(true)
+            store.dispatch({type: 'SET_GAME_END', payload: {
+                    ...stateRed,
+                    isGameEnded: true
+                }})
         } else if (isFieldFilled) {
-            setIsDraw(true)
+            store.dispatch({type: 'SET_DRAW', payload: {
+                    ...stateRed,
+                    isDraw: true
+            }})
         } else if (!isGameEnded) {
-            setCurrentPlayer(currentPlayer === 'X' ? '0' : 'X')
+            let nextPlayer;
+            currentPlayer === 'X' ? nextPlayer = '0' : nextPlayer = 'X'
+            store.dispatch({type: 'SET_NEXT_PLAYER', payload: {
+                    ...stateRed,
+                    currentPlayer: nextPlayer
+                }})
         }
 
     }
@@ -41,15 +64,4 @@ export const FieldLayout = ({ field, setField, currentPlayer, setCurrentPlayer, 
             ))}
         </ul>
     )
-}
-
-FieldLayout.propTypes = {
-    currentPlayer: PropTypes.string,
-    setCurrentPlayer: PropTypes.func,
-    isGameEnded: PropTypes.bool,
-    setIsGameEnded: PropTypes.func,
-    isDraw: PropTypes.bool,
-    setIsDraw: PropTypes.func,
-    field: PropTypes.array,
-    setField: PropTypes.func
 }
